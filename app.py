@@ -15,14 +15,7 @@ app = Flask(__name__)
 @app.route("/data")
 def data():
     # set empty arrays
-    states = []
-    state_abreviations = []
-    age = []
-    income = []
-    high_school_or_less = []
-    suffered_depression = []
-    obese = []
-    lacks_insurance = []
+    object_list = []
 
     # set path for data.csv
     csvpath = os.path.join("data", "data.csv")
@@ -38,27 +31,17 @@ def data():
             if headers_flag == 0:
                 headers_flag = 1
             else:
-                states.append(row[0])
-                state_abreviations.append(row[1])
-                age.append(row[2])
-                income.append(row[3])
-                high_school_or_less.append(row[4])
-                suffered_depression.append(row[5])
-                obese.append(row[6])
-                lacks_insurance.append(row[7])
-
-    data_object = {
-        'states': states,
-        'state_abreviations': state_abreviations,
-        'age': age,
-        'income': income,
-        'high_school_or_less': high_school_or_less,
-        'suffered_depression': suffered_depression,
-        'obese': obese,
-        'lacks_insurance': lacks_insurance
-    }
-    print(data_object)
-    return jsonify(data_object)
+                obj = {'states':row[0],
+                    'state_abreviations':row[1],
+                    'age':row[2],
+                    'income':row[3],
+                    'high_school_or_less':row[4],
+                    'suffered_depression':row[5],
+                    'obese':row[6],
+                    'lacks_insurance':row[7]}
+                object_list.append(obj)
+    print(object_list)
+    return jsonify(object_list)
 
 # create route that renders index.html template
 
