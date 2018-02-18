@@ -1,7 +1,7 @@
 var svgWidth = 960;
 var svgHeight = 500;
 
-var margin = { top: 20, right: 40, bottom: 105, left: 125};
+var margin = { top: 20, right: 40, bottom: 105, left: 125 };
 
 var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
@@ -27,7 +27,7 @@ d3.json(dataUrl, function (error, riskData) {
 
     console.log(riskData);
 
-    riskData.forEach(function(data){
+    riskData.forEach(function (data) {
         data.age = +data.age;
         data.income = +data.income;
         data.high_school_or_less = +data.high_school_or_less
@@ -48,26 +48,25 @@ d3.json(dataUrl, function (error, riskData) {
     // These variables store the minimum and maximum values in a column in data.csv
     var xMin;
     var xMax;
+    var yMin;
     var yMax;
 
     // This function identifies the minimum and maximum values in a column in data.csv
     // and assign them to xMin, xMax and yMax variables, which will define the axes domains
     function findMinAndMax(dataColumnX, dataColumnY) {
         xMin = d3.min(riskData, function (data) {
-            //##############################################
-            // * 0.8 ?
             return +data[dataColumnX] * 0.8;
         });
 
         xMax = d3.max(riskData, function (data) {
-            //##############################################
-            // * 1.1 ?
             return +data[dataColumnX] * 1.1;
         });
 
+        yMin = d3.min(riskData, function (data) {
+            return +data[dataColumnY] * 0.8;
+        });
+
         yMax = d3.max(riskData, function (data) {
-            //##############################################
-            // * 1.1 ?
             return +data[dataColumnY] * 1.1;
         });
     }
@@ -84,7 +83,7 @@ d3.json(dataUrl, function (error, riskData) {
 
     // Set the domain of an axis to extend from the min to the max value of the data column
     xLinearScale.domain([xMin, xMax]);
-    yLinearScale.domain([0, yMax]);
+    yLinearScale.domain([yMin, yMax]);
 
     // Initialize tooltip
     var toolTip = d3
@@ -143,17 +142,9 @@ d3.json(dataUrl, function (error, riskData) {
         })
         .attr("r", "15")
         .attr("fill", "#009900")
-        .attr("stroke","black")
-        // display tooltip on click
-        .on("click", function (data) {
-            toolTip.show(data);
-        })
-        // hide tooltip on mouseout
-        .on("mouseout", function (data, index) {
-            toolTip.hide(data);
-        });
+        .attr("stroke", "black")
 
-    chart  
+    chart
         .selectAll("text")
         .data(riskData)
         .enter()
@@ -164,9 +155,21 @@ d3.json(dataUrl, function (error, riskData) {
         .attr("y", function (data, index) {
             return yLinearScale(+data[currentAxisLabelY]);
         })
-        .attr("text", function (data, index) {
+        .attr("dy",".3em")
+        .text(function (data, index) {
             return data.state_abreviations;
         })
+        .attr("text-anchor", "middle")
+        .attr("fill", "white")
+        .attr("class", "state-labels")
+        // display tooltip on click
+        .on("mouseover", function (data) {
+            toolTip.show(data);
+        })
+        // hide tooltip on mouseout
+        .on("mouseout", function (data, index) {
+            toolTip.hide(data);
+        });
 
     // Append an SVG group for the x-axis, then display the x-axis
     chart
@@ -178,7 +181,7 @@ d3.json(dataUrl, function (error, riskData) {
 
     // Append a group for y-axis, then display it
     chart.append("g")
-        .attr("class","y-axis")
+        .attr("class", "y-axis")
         .call(leftAxis);
 
     // Append y-axis label
@@ -256,7 +259,7 @@ d3.json(dataUrl, function (error, riskData) {
         if (clickedAxisName === 'high_school_or_less' || clickedAxisName === 'income' || clickedAxisName === 'age') {
             axisToChangeFilter = '.x-axis'
         }
-        else{
+        else {
             axisToChangeFilter = '.y-axis'
         }
         console.log(axisToChangeFilter)
@@ -289,7 +292,7 @@ d3.json(dataUrl, function (error, riskData) {
                 // Assign the clicked axis to the variable currentAxisLabelX
                 currentAxisLabelX = clickedAxis;
                 // Call findMinAndMax() to define the min and max domain values.
-                findMinAndMax(currentAxisLabelX,currentAxisLabelY);
+                findMinAndMax(currentAxisLabelX, currentAxisLabelY);
                 // Set the domain for the x-axis
                 xLinearScale.domain([xMin, xMax]);
                 // Create a transition effect for the x-axis
@@ -312,6 +315,16 @@ d3.json(dataUrl, function (error, riskData) {
                         .duration(1800);
                 });
 
+                d3.selectAll(".state-labels").each(function () {
+                    d3
+                        .select(this)
+                        .transition()
+                        .attr("x", function (data) {
+                            return xLinearScale(+data[currentAxisLabelX]);
+                        })
+                        .duration(1800);
+                });
+
                 // Change the status of the axes. See above for more info on this function.
                 labelChange(clickedSelection);
             }
@@ -319,9 +332,9 @@ d3.json(dataUrl, function (error, riskData) {
                 // Assign the clicked axis to the variable currentAxisLabelX
                 currentAxisLabelY = clickedAxis;
                 // Call findMinAndMax() to define the min and max domain values.
-                findMinAndMax(currentAxisLabelX,currentAxisLabelY);
+                findMinAndMax(currentAxisLabelX, currentAxisLabelY);
                 // Set the domain for the x-axis
-                yLinearScale.domain([0, yMax]);
+                yLinearScale.domain([yMin, yMax]);
                 // Create a transition effect for the x-axis
                 svg
                     .select(".y-axis")
@@ -341,6 +354,16 @@ d3.json(dataUrl, function (error, riskData) {
                         })
                         .duration(1800);
                 });
+                d3.selectAll(".state-labels").each(function () {
+                    d3
+                        .select(this)
+                        .transition()
+                        .attr("y", function (data) {
+                            return yLinearScale(+data[currentAxisLabelY]);
+                        })
+                        .duration(1800);
+                });
+
 
                 // Change the status of the axes. See above for more info on this function.
                 labelChange(clickedSelection);
