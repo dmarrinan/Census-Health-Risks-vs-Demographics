@@ -190,9 +190,9 @@ d3.json(dataUrl, function (error, riskData) {
         .attr("dy", "1em")
         .attr("class", "axis-text")
         // This axis label is active by default
-        .attr("class", "axis-text active")
+        .attr("class", "axis-text active y-axis")
         .attr("data-axis-name", "obese")
-        .text("% Obese: ");
+        .text("% Obese");
 
     chart
         .append("text")
@@ -200,10 +200,9 @@ d3.json(dataUrl, function (error, riskData) {
         .attr("y", 0 - margin.left + 40)
         .attr("x", 0 - height / 2)
         .attr("dy", "1em")
-        .attr("class", "axis-text")
-        .attr("class", "axis-text inactive")
+        .attr("class", "axis-text inactive y-axis")
         .attr("data-axis-name", "lacks_insurance")
-        .text("% Lacking Insurance: ");
+        .text("% Lacking Insurance");
 
     chart
         .append("text")
@@ -211,10 +210,9 @@ d3.json(dataUrl, function (error, riskData) {
         .attr("y", 0 - margin.left + 65)
         .attr("x", 0 - height / 2)
         .attr("dy", "1em")
-        .attr("class", "axis-text")
-        .attr("class", "axis-text inactive")
+        .attr("class", "axis-text inactive y-axis")
         .attr("data-axis-name", "suffered_depression")
-        .text("% Have Suffered Depression: ");
+        .text("% Have Suffered Depression");
 
     // Append x-axis labels
     chart
@@ -224,7 +222,7 @@ d3.json(dataUrl, function (error, riskData) {
         "translate(" + width / 2 + " ," + (height + margin.top + 20) + ")"
         )
         // This axis label is active by default
-        .attr("class", "axis-text active")
+        .attr("class", "axis-text active x-axis")
         .attr("data-axis-name", "high_school_or_less")
         .text("% Completed High School or Less");
 
@@ -235,7 +233,7 @@ d3.json(dataUrl, function (error, riskData) {
         "translate(" + width / 2 + " ," + (height + margin.top + 45) + ")"
         )
         // This axis label is inactive by default
-        .attr("class", "axis-text inactive")
+        .attr("class", "axis-text inactive x-axis")
         .attr("data-axis-name", "income")
         .text("Median Income ($)");
 
@@ -246,16 +244,26 @@ d3.json(dataUrl, function (error, riskData) {
         "translate(" + width / 2 + " ," + (height + margin.top + 70) + ")"
         )
         // This axis label is inactive by default
-        .attr("class", "axis-text inactive")
+        .attr("class", "axis-text inactive x-axis")
         .attr("data-axis-name", "age")
         .text("Median Age");
 
     // Change an axis's status from inactive to active when clicked (if it was inactive)
     // Change the status of all active axes to inactive otherwise
     function labelChange(clickedAxis) {
+        var axisToChangeFilter
+        var clickedAxisName = clickedAxis.attr("data-axis-name")
+        if (clickedAxisName === 'high_school_or_less' || clickedAxisName === 'income' || clickedAxisName === 'age') {
+            axisToChangeFilter = '.x-axis'
+        }
+        else{
+            axisToChangeFilter = '.y-axis'
+        }
+        console.log(axisToChangeFilter)
         d3
             .selectAll(".axis-text")
             .filter(".active")
+            .filter(axisToChangeFilter)
             // An alternative to .attr("class", <className>) method. Used to toggle classes.
             .classed("active", false)
             .classed("inactive", true);
