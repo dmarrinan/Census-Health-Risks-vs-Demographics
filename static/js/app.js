@@ -1,5 +1,5 @@
-var svgWidth = 960;
-var svgHeight = 500;
+var svgWidth = 1080;
+var svgHeight = 560;
 
 var margin = { top: 20, right: 40, bottom: 105, left: 125 };
 
@@ -55,19 +55,19 @@ d3.json(dataUrl, function (error, riskData) {
     // and assign them to xMin, xMax and yMax variables, which will define the axes domains
     function findMinAndMax(dataColumnX, dataColumnY) {
         xMin = d3.min(riskData, function (data) {
-            return +data[dataColumnX] * 0.8;
+            return +data[dataColumnX] * 0.95;
         });
 
         xMax = d3.max(riskData, function (data) {
-            return +data[dataColumnX] * 1.1;
+            return +data[dataColumnX] * 1.05;
         });
 
         yMin = d3.min(riskData, function (data) {
-            return +data[dataColumnY] * 0.8;
+            return +data[dataColumnY] * 0.95;
         });
 
         yMax = d3.max(riskData, function (data) {
-            return +data[dataColumnY] * 1.1;
+            return +data[dataColumnY] * 1.05;
         });
     }
 
@@ -143,6 +143,7 @@ d3.json(dataUrl, function (error, riskData) {
         .attr("r", "15")
         .attr("fill", "#009900")
         .attr("stroke", "black")
+        .style("opacity",0.85)
 
     chart
         .selectAll("text")
