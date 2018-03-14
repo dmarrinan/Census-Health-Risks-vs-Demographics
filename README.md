@@ -8,13 +8,13 @@ app.py is a flask app that returns a jsonified object built using data from a cs
 ## Requirements
 This notebook requires python to be installed. Python 3.6.2 was used during development. SQLAlchemy was used to query the databases in python. Flask was used to host the app to return the data for the plots in json format. All required libraries can be found in requirements.txt and installed with the following command: 
 
-pip install requirements.txt -r 
+`pip install requirements.txt -r` 
 
 
 ## Running the Code
 To run the flask app type the following into the command line: 
 
-python app.py 
+`python app.py` 
 
 Copy the local address listed into your browser and it will render the html page. Use the dropdown menu to switch between different subjects from the study.
 
